@@ -28,7 +28,7 @@ high_temp=0             #   starting temp for scan
 low_temp=0              #   final temp for scan
 temp_interval=0         #   interval between scan points
 nscans=0                #   number of scans (each at diff T)
-iscan=0                 #   current number
+iscan=1                 #   current number
 iscan1=0                #   current number
 MovieOn=""              #   set to .true. to make movie of 1 temp
 DeltaU=0                #   change in energy between 2 configs
@@ -92,7 +92,7 @@ spin = open("spin-array", "w")
 spin.write("number of rows :"+str(nrows))
 spin.write("\nnumber of columns :"+str(ncols))
 
-nscans=(high_temp-low_temp)/temp_interval+1
+nscans=int((high_temp-low_temp)/temp_interval+1)
 
 if(MovieOn==".true.\n"):
     spin.write("\n51")
@@ -108,3 +108,16 @@ magnet.write("Temp\t\t\tave_magnetization\t\t\tave_magnetization^2\t\t\tsuscepti
 energy = open("energy","w")
 energy.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
 
+for iscan in range(1,nscans):    
+    temp = high_temp - temp_interval*(iscan-1)
+    print("Running Program for Temperature : "+str(temp))
+    beta  =  1.0/temp
+    output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
+    if(ConfigType==1):
+        print("1")
+    elif(ConfigType==2):
+        print("2")
+    elif(ConfigType==3):
+        print("3")
+    else:
+        print("Error! Check ConfigType parameter in ising.in")
