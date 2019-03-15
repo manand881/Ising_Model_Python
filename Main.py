@@ -44,8 +44,8 @@ output_count=0          #   Number of times things have been added to averages
 ran0=0                  #   T B C
 rand_uniform=0          #   T B C
 stringreader=""         #   variable to read files from text to be later converted to int
-iterator=0              #   to be used with for loop
-iterator2=0             #   to be used with for loop
+iterator=0              #   to be used with for loop / dummy operation
+iterator2=0             #   to be used with for loop / dummy operations
 
 print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
@@ -125,9 +125,26 @@ for iscan in range(1,nscans):
         a[::2,1::2] = -1
 
     elif(ConfigType==2):
-        print("2")
-        for iterator in range(1,nrows+2):
-            for iterator2 in range(1,(ncols+2)/2):
+        
+        iterator=nrows
+        iterator2=ncols
+
+        if(nrows%2!=0):
+            iterator=nrows+1
+        if(ncols%2!=0):
+            iterator2=ncols+1
+
+        a=numpy.ones((iterator,iterator2),dtype=int)
+        
+        for i in range(0,iterator):
+            for j in range(0,iterator2):
+                if(j>=iterator2/2):
+                    dummyval=-1
+                else:
+                    dummyval=1
+                a[:,j]=dummyval
+        iterator=iterator2=dummyval=0       
+
     elif(ConfigType==3):
         print("3")
     else:
