@@ -6,7 +6,10 @@
 #  NumPy has been installed and used in this project.
 
 import numpy
-import csv
+import random
+import time
+
+time_start = time.process_time()    # for Program Runtime Profiling
 
 i=0                     #   Dummy Intgers
 j=0                     #   Dummy Intgers
@@ -46,6 +49,7 @@ rand_uniform=0          #   T B C
 stringreader=""         #   variable to read files from text to be later converted to int
 iterator=0              #   to be used with for loop / dummy operation
 iterator2=0             #   to be used with for loop / dummy operations
+
 
 print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
@@ -92,6 +96,19 @@ ising.close()
 
 a=numpy.zeros(shape=(nrows+2,ncols+2))          #   Matrix of spins
 
+def matrix_row_col_check(a,nrows,ncols):
+    iterator=nrows
+    iterator2=ncols
+
+    if(nrows%2!=0):
+        iterator=nrows+1
+    if(ncols%2!=0):
+        iterator2=ncols+1
+
+    a=numpy.ones((iterator,iterator2),dtype=int)
+    return iterator
+print(iterator)
+print(iterator2)
 spin = open("spin-array", "w")
 spin.write("number of rows :"+str(nrows))
 spin.write("\nnumber of columns :"+str(ncols))
@@ -117,8 +134,10 @@ for iscan in range(1,nscans):
     print("Running Program for Temperature : "+str(temp))
     beta  =  1.0/temp
     output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
+    
     if(ConfigType==1):
-        # checkerboard pattern
+        
+        # Checkerboard Pattern Matrix
 
         a = numpy.ones((nrows+1,ncols+1),dtype=int)
         a[1::2,::2] = -1
@@ -126,16 +145,20 @@ for iscan in range(1,nscans):
 
     elif(ConfigType==2):
         
-        iterator=nrows
-        iterator2=ncols
+        # Equal Interface Matrix
 
-        if(nrows%2!=0):
-            iterator=nrows+1
-        if(ncols%2!=0):
-            iterator2=ncols+1
+        # iterator=nrows
+        # iterator2=ncols
 
-        a=numpy.ones((iterator,iterator2),dtype=int)
+        # if(nrows%2!=0):
+        #     iterator=nrows+1
+        # if(ncols%2!=0):
+        #     iterator2=ncols+1
+
+        # a=numpy.ones((iterator,iterator2),dtype=int)
         
+        matrix_row_col_check(a,nrows,ncols)
+
         for i in range(0,iterator):
             for j in range(0,iterator2):
                 if(j>=iterator2/2):
@@ -143,10 +166,67 @@ for iscan in range(1,nscans):
                 else:
                     dummyval=1
                 a[:,j]=dummyval
-        iterator=iterator2=dummyval=0       
+        iterator=iterator2=dummyval=0   
 
     elif(ConfigType==3):
-        print("3")
+
+        # Unequal Interface Matrix
+
+        # iterator=nrows
+        # iterator2=ncols
+
+        # if(nrows%2!=0):
+        #     iterator=nrows+1
+        # if(ncols%2!=0):
+        #     iterator2=ncols+1
+
+        # a=numpy.ones((iterator,iterator2),dtype=int)
+
+        matrix_row_col_check(a,nrows,ncols)
+
+        
+        for i in range(0,iterator):
+            for j in range(0,iterator2):
+                if(j>=iterator2/4):
+                    dummyval=-1
+                else:
+                    dummyval=1
+                a[:,j]=dummyval
+        iterator=iterator2=dummyval=0
+    elif(ConfigType==4):
+
+        # Random Matrix
+
+        # iterator=nrows
+        # iterator2=ncols
+
+        # if(nrows%2!=0):
+        #     iterator=nrows+1
+        # if(ncols%2!=0):
+        #     iterator2=ncols+1
+
+        # a=numpy.ones((iterator,iterator2),dtype=int)
+
+        matrix_row_col_check(a,nrows,ncols)
+        
+        rancheckplus=0
+        rancheckminus=0
+        for i in range(0,iterator):
+            for j in range(0,iterator2):
+                dummy=random.randint(1,100)
+                if(dummy%2==0 or dummy==0):
+                    dummy=1
+                    rancheckplus+=1
+                else:
+                    dummy=-1
+                    rancheckminus+=1
+                a[i,j]=dummy
+
     else:
-        print("Error! Check ConfigType parameter in ising.in")
-print(a)        
+        print("Error! Check ConfigType parameter in ising.in")        
+print(a)
+
+Profiler = open("Program_Profile","a")
+time_elapsed = (time.process_time() - time_start)
+print(time_elapsed)
+Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
