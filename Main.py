@@ -16,7 +16,6 @@ n2=0                    #   Dummy Intgers
 m2=0                    #   Dummy Intgers
 nrows=0                 #   Number of rows of A
 ncols=0                 #   Number of Columns of 
-a=numpy.zeros(shape=(nrows+2,ncols+2))  #   Matrix of spins
 temp=0                  #   Temperature
 beta=0                  #   Inverse Temperature
 ConfigType=0            #   Starting Configuration type
@@ -45,6 +44,9 @@ output_count=0          #   Number of times things have been added to averages
 ran0=0                  #   T B C
 rand_uniform=0          #   T B C
 stringreader=""         #   variable to read files from text to be later converted to int
+iterator=0              #   to be used with for loop
+iterator2=0             #   to be used with for loop
+
 print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
 print("The critical temperature is approximately 2.3, as seen on Chandler p. 123.\n")
@@ -88,6 +90,8 @@ MovieOn=(ising.readline())
 
 ising.close()
 
+a=numpy.zeros(shape=(nrows+2,ncols+2))          #   Matrix of spins
+
 spin = open("spin-array", "w")
 spin.write("number of rows :"+str(nrows))
 spin.write("\nnumber of columns :"+str(ncols))
@@ -114,10 +118,18 @@ for iscan in range(1,nscans):
     beta  =  1.0/temp
     output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
     if(ConfigType==1):
-        print("1")
+        # checkerboard pattern
+
+        a = numpy.ones((nrows+1,ncols+1),dtype=int)
+        a[1::2,::2] = -1
+        a[::2,1::2] = -1
+
     elif(ConfigType==2):
         print("2")
+        for iterator in range(1,nrows+2):
+            for iterator2 in range(1,(ncols+2)/2):
     elif(ConfigType==3):
         print("3")
     else:
         print("Error! Check ConfigType parameter in ising.in")
+print(a)        
