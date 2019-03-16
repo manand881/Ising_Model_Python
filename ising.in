@@ -15,5 +15,5 @@ temp_interval - scanning interval
 ConfigType - 1: checkerboard, 2: interface, 3: unequal interface, 4: Random Matrix
 1
 MovieOn - set to .true. when running for 1 temp to make movie
-.false.
+.true.
 End of file.

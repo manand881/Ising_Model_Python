@@ -33,7 +33,7 @@ temp_interval=0         #   interval between scan points
 nscans=0                #   number of scans (each at diff T)
 iscan=1                 #   current number
 iscan1=0                #   current number
-MovieOn=""              #   set to .true. to make movie of 1 temp
+MovieOn=None            #   set to .true. to make movie of 1 temp
 DeltaU=0                #   change in energy between 2 configs
 DeltaU1=0               #   energy changes for lattice gas
 DeltaU2=0               #   energy changes for lattice gas
@@ -91,11 +91,17 @@ stringreader=(ising.readline())
 ConfigType=int(stringreader)
 
 next(ising)
-MovieOn=(ising.readline())
+stringreader=(ising.readline())
+if(stringreader==".true.\n"):
+    MovieOn=True
 
 ising.close()
 
 a=numpy.zeros(shape=(nrows,ncols))          #   Matrix of spins
+
+# Funtions
+
+# Function to determine the number of rows and columns the spin matrix must have
 
 def matrix_row_col_check():
     
@@ -115,10 +121,7 @@ def matrix_row_col_check():
 
     a=numpy.ones((iterator,iterator2),dtype=int)
     
-print(iterator)
-print("\n")
-print(iterator2)
-print("\n")
+
 
 spin = open("spin-array", "w")
 spin.write("number of rows :"+str(nrows))
@@ -126,7 +129,9 @@ spin.write("\nnumber of columns :"+str(ncols))
 
 nscans=int((high_temp-low_temp)/temp_interval+1)
 
-if(MovieOn==".true.\n"):
+# if(MovieOn==".true.\n"):
+if(MovieOn==True):
+
     spin.write("\n51")
     spin.write("\n1")
 else:
@@ -145,6 +150,8 @@ for iscan in range(1,nscans):
     print("Running Program for Temperature : "+str(temp))
     beta  =  1.0/temp
     output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
+    
+    
     
     if(ConfigType==1):
         
@@ -206,11 +213,19 @@ for iscan in range(1,nscans):
     else:
         print("Error! Check ConfigType parameter in ising.in")      
 
-print("\n")
-print(a)
-print("\n")
+    for i in range(ipass,npass):
+        if(MovieOn and ipass%(npass/50)):
+            for i in range(1,nrows):
+                for j in range(1,ncols):
+                    spin.write(i,j,a[i,j])
+
+        if(ipass>nequil):
+           output_count+=1
+        #    magnetization= 
+    
 
 Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
+spin.close()

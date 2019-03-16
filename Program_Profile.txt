@@ -2,3 +2,7 @@ Program took 0.05316859500000004 seconds to run
 Program took 0.05434789999999978 seconds to run
 Program took 0.06435407900000012 seconds to run
 Program took 0.04778662599999994 seconds to run
+Program took 0.038153781 seconds to run
+Program took 0.032146746000000004 seconds to run
+Program took 0.038050954000000026 seconds to run
+Program took 0.03822972800000013 seconds to run
