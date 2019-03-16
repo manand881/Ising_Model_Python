@@ -9,7 +9,8 @@ import numpy
 import random
 import time
 
-time_start = time.process_time()    # for Program Runtime Profiling
+time_start = time.perf_counter()    # for Program Runtime Profiling. Time.clock()
+
 
 i=0                     #   Dummy Intgers
 j=0                     #   Dummy Intgers
@@ -94,11 +95,18 @@ MovieOn=(ising.readline())
 
 ising.close()
 
-a=numpy.zeros(shape=(nrows+2,ncols+2))          #   Matrix of spins
+a=numpy.zeros(shape=(nrows,ncols))          #   Matrix of spins
 
-def matrix_row_col_check(a,nrows,ncols):
-    iterator=nrows
-    iterator2=ncols
+def matrix_row_col_check():
+    
+    global iterator
+    global iterator2
+    global nrows
+    global ncols
+    global a
+
+    iterator = nrows
+    iterator2 = ncols
 
     if(nrows%2!=0):
         iterator=nrows+1
@@ -106,9 +114,12 @@ def matrix_row_col_check(a,nrows,ncols):
         iterator2=ncols+1
 
     a=numpy.ones((iterator,iterator2),dtype=int)
-    return iterator
+    
 print(iterator)
+print("\n")
 print(iterator2)
+print("\n")
+
 spin = open("spin-array", "w")
 spin.write("number of rows :"+str(nrows))
 spin.write("\nnumber of columns :"+str(ncols))
@@ -139,25 +150,16 @@ for iscan in range(1,nscans):
         
         # Checkerboard Pattern Matrix
 
-        a = numpy.ones((nrows+1,ncols+1),dtype=int)
+        matrix_row_col_check()        
+        
         a[1::2,::2] = -1
         a[::2,1::2] = -1
 
     elif(ConfigType==2):
         
-        # Equal Interface Matrix
+        # Interface Pattern Matrix
 
-        # iterator=nrows
-        # iterator2=ncols
-
-        # if(nrows%2!=0):
-        #     iterator=nrows+1
-        # if(ncols%2!=0):
-        #     iterator2=ncols+1
-
-        # a=numpy.ones((iterator,iterator2),dtype=int)
-        
-        matrix_row_col_check(a,nrows,ncols)
+        matrix_row_col_check()
 
         for i in range(0,iterator):
             for j in range(0,iterator2):
@@ -170,21 +172,10 @@ for iscan in range(1,nscans):
 
     elif(ConfigType==3):
 
-        # Unequal Interface Matrix
+        # Unequal Interface Pattern Matrix
 
-        # iterator=nrows
-        # iterator2=ncols
+        matrix_row_col_check()
 
-        # if(nrows%2!=0):
-        #     iterator=nrows+1
-        # if(ncols%2!=0):
-        #     iterator2=ncols+1
-
-        # a=numpy.ones((iterator,iterator2),dtype=int)
-
-        matrix_row_col_check(a,nrows,ncols)
-
-        
         for i in range(0,iterator):
             for j in range(0,iterator2):
                 if(j>=iterator2/4):
@@ -195,19 +186,9 @@ for iscan in range(1,nscans):
         iterator=iterator2=dummyval=0
     elif(ConfigType==4):
 
-        # Random Matrix
+        # Random Pattern Matrix
 
-        # iterator=nrows
-        # iterator2=ncols
-
-        # if(nrows%2!=0):
-        #     iterator=nrows+1
-        # if(ncols%2!=0):
-        #     iterator2=ncols+1
-
-        # a=numpy.ones((iterator,iterator2),dtype=int)
-
-        matrix_row_col_check(a,nrows,ncols)
+        matrix_row_col_check()
         
         rancheckplus=0
         rancheckminus=0
@@ -223,10 +204,13 @@ for iscan in range(1,nscans):
                 a[i,j]=dummy
 
     else:
-        print("Error! Check ConfigType parameter in ising.in")        
-print(a)
+        print("Error! Check ConfigType parameter in ising.in")      
 
-Profiler = open("Program_Profile","a")
-time_elapsed = (time.process_time() - time_start)
-print(time_elapsed)
+print("\n")
+print(a)
+print("\n")
+
+Profiler = open("Program_Profile.txt","a+")
+time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
+Profiler.close()
