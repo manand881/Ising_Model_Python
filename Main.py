@@ -134,7 +134,9 @@ if(MovieOn==True):
 
     spin.write("\n51")
     spin.write("\n1")
+
 else:
+    
     spin.write("\nnumber of scans :"+str(nscans))
     spin.write("\n2")
 
@@ -197,17 +199,13 @@ for iscan in range(1,nscans):
 
         matrix_row_col_check()
         
-        rancheckplus=0
-        rancheckminus=0
         for i in range(0,iterator):
             for j in range(0,iterator2):
                 dummy=random.randint(1,100)
                 if(dummy%2==0 or dummy==0):
                     dummy=1
-                    rancheckplus+=1
                 else:
                     dummy=-1
-                    rancheckminus+=1
                 a[i,j]=dummy
 
     else:
@@ -220,12 +218,28 @@ for iscan in range(1,nscans):
                     spin.write(i,j,a[i,j])
 
         if(ipass>nequil):
-           output_count+=1
-        #    magnetization= 
-    
+           
+            output_count+=1
+            magnetization = sum(a[1:nrows,1:ncols])/(ncols*nrows*1.00)
+            magnetization_ave = magnetization_ave + magnetization
+            magnetization2_ave = magnetization2_ave + magnetization**2
+            energy = 0.00
+           
+            for i in range(1,nrows):
+                for j in range(1,ncols):
+                   
+                    energy = energy-a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
+            
+            energy = energy / (ncols*nrows*2.0)
+            energy_ave = energy_ave + energy
+            energy2_ave = energy2_ave + energy**2
+        
 
+        
 Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
 spin.close()
+magnet.close()
+temper.close()
