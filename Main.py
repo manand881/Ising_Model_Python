@@ -8,6 +8,7 @@
 import numpy
 import random
 import time
+import math
 
 time_start = time.perf_counter()    # for Program Runtime Profiling. Time.clock()
 
@@ -56,7 +57,7 @@ print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
 print("The critical temperature is approximately 2.3, as seen on Chandler p. 123.\n")
 
-ising = open("ising.in", "r")
+ising = open("ising.in", "r+")
 
 next(ising)
 stringreader=(ising.readline())
@@ -121,6 +122,10 @@ def matrix_row_col_check():
 
     a=numpy.ones((iterator,iterator2),dtype=int)
     
+def pick_random():
+    global ran0
+    ran0=round(random.uniform(0,1),12) 
+
 
 
 spin = open("spin-array", "w")
@@ -140,11 +145,11 @@ else:
     spin.write("\nnumber of scans :"+str(nscans))
     spin.write("\n2")
 
-temper = open("temperature.dat","w")
+temper = open("temperature.dat","w+")
 temper.write("Temperature\t\t\ti\t\t\tj\t\t\tspin")
-magnet = open("magnetization","w")
+magnet = open("magnetization","w+")
 magnet.write("Temp\t\t\tave_magnetization\t\t\tave_magnetization^2\t\t\tsusceptibility")
-energy = open("energy","w")
+energy = open("energy","w+")
 energy.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
 
 for iscan in range(1,nscans):    
@@ -193,6 +198,7 @@ for iscan in range(1,nscans):
                     dummyval=1
                 a[:,j]=dummyval
         iterator=iterator2=dummyval=0
+        
     elif(ConfigType==4):
 
         # Random Pattern Matrix
@@ -233,13 +239,44 @@ for iscan in range(1,nscans):
             energy = energy / (ncols*nrows*2.0)
             energy_ave = energy_ave + energy
             energy2_ave = energy2_ave + energy**2
-        
 
-        
+        pick_random() 
+        m=int((nrows-1)*ran0+2)   
+        pick_random()
+        m=int((ncols-1)*ran0+2)
+        trial_spin=-a[m,n]   
+
+
+        DeltaU = -trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2
+        pick_random()
+        log_eta=math.log(ran0+(1e-10))
+        if(-beta*DeltaU>log_eta):
+            a[m,n]=trial_spin
+            if(m==2):
+                a[nrows+2,n]=trial_spin
+            if(m==nrows+1):
+                a[1,n]=trial_spin
+            if(n==2):
+                a[m,ncols+2]=trial_spin
+            if(n==ncols+1):
+                a[m,1]=trial_spin
+    
+    if(MovieOn!=True):
+        for i in range(1,nrows+1):
+            for j in range(1,ncols+1):
+                spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
+    magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
+    energy.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
+
+print("Program Completed")
+
+
+spin.close()
+magnet.close()
+temper.close()
+
 Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
-spin.close()
-magnet.close()
-temper.close()
+print(ran0)

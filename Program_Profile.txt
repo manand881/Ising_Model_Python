@@ -6,3 +6,13 @@ Program took 0.038153781 seconds to run
 Program took 0.032146746000000004 seconds to run
 Program took 0.038050954000000026 seconds to run
 Program took 0.03822972800000013 seconds to run
+Program took 0.11324970700000003 seconds to run
+Program took 0.09197610600000006 seconds to run
+Program took 0.09221162599999999 seconds to run
+Program took 0.10087381299999998 seconds to run
+Program took 0.42694144 seconds to run
+Program took 0.32122282700000016 seconds to run
+Program took 0.34335530700000017 seconds to run
+Program took 0.38114304 seconds to run
+Program took 0.4556996270000002 seconds to run
+Program took 0.37354368000000004 seconds to run
