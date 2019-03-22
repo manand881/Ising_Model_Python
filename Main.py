@@ -1,16 +1,17 @@
-#  Ising Model in Python.
+#   Ising Model in Python.
 
-#  13-03-2019.
-#  Written by Anand Mahesh.
-#  Python 3.7.
-#  NumPy has been installed and used in this project.
+#   13-03-2019.
+#   Written by Anand Mahesh.
+#   Python 3.7.
+#   NumPy has been installed and used in this project.
+#   tools used: Visual Studio Code, GitHub Desktop.
 
 import numpy
 import random
 import time
 import math
 
-time_start = time.perf_counter()    # for Program Runtime Profiling. Time.clock()
+time_start = time.perf_counter()    #   For Program Runtime Profiling. Time.clock() has been depreciated 
 
 
 i=0                     #   Dummy Intgers
@@ -57,8 +58,8 @@ print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
 print("The critical temperature is approximately 2.3, as seen on Chandler p. 123.\n")
 
-ising = open("ising.in", "r+")
-
+ising = open("ising.in", "r")       #   This section is for reading input parameters and assigning it to global variables
+                                       
 next(ising)
 stringreader=(ising.readline())
 nrows=int(stringreader)
@@ -98,11 +99,11 @@ if(stringreader==".true.\n"):
 
 ising.close()
 
-a=numpy.zeros(shape=(nrows,ncols))          #   Matrix of spins
+a=numpy.zeros(shape=(nrows,ncols))          #   Creating a matrix of spins populated by zeros
 
-# Funtions
+#   Funtions
 
-# Function to determine the number of rows and columns the spin matrix must have
+#   Function to determine the number of rows and columns the spin matrix must have
 
 def matrix_row_col_check():
     
@@ -121,7 +122,10 @@ def matrix_row_col_check():
         iterator2=ncols+1
 
     a=numpy.ones((iterator,iterator2),dtype=int)
-    
+
+#   End of Function
+
+#   Function to generate uniform random numbers
 
 def pick_random():
 
@@ -129,14 +133,14 @@ def pick_random():
     
     ran0=round(random.uniform(0,1),12) 
 
+#   End of function
 
 spin = open("spin-array", "w")
 spin.write("number of rows :"+str(iterator))
 spin.write("\nnumber of columns :"+str(iterator2))
 
-nscans=int((high_temp-low_temp)/temp_interval+1)
+nscans=int((high_temp-low_temp)/temp_interval+1)    #   Determining the number of scans
 
-# if(MovieOn==".true.\n"):
 if(MovieOn==True):
 
     spin.write("\n51")
@@ -154,14 +158,14 @@ magnet.write("Temp\t\t\tave_magnetization\t\t\tave_magnetization^2\t\t\tsuscepti
 energyObj = open("energy","w+")
 energyObj.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
 
-for iscan in range(1,nscans+1):    
+for iscan in range(1,nscans+1):                                 #   Main for loop    
     temp = high_temp - temp_interval*(iscan-1)
-    print("Running Program for Temperature : "+str(temp))
+    print("Running Program for Temperature : "+str(temp)+"\n")
     beta  =  1.0/temp
         
-    if(ConfigType==1):
+    if(ConfigType==1):                                          #   Section for choosing Configtype
         
-        # Checkerboard Pattern Matrix
+        #   Checkerboard Pattern Matrix
 
         matrix_row_col_check()        
         
@@ -170,7 +174,7 @@ for iscan in range(1,nscans+1):
 
     elif(ConfigType==2):
         
-        # Interface Pattern Matrix
+        #   Interface Pattern Matrix
 
         matrix_row_col_check()
 
@@ -185,7 +189,7 @@ for iscan in range(1,nscans+1):
 
     elif(ConfigType==3):
 
-        # Unequal Interface Pattern Matrix
+        #   Unequal Interface Pattern Matrix
 
         matrix_row_col_check()
 
@@ -200,7 +204,7 @@ for iscan in range(1,nscans+1):
         
     elif(ConfigType==4):
 
-        # Random Pattern Matrix
+        #   Random Pattern Matrix
 
         matrix_row_col_check()
         
@@ -216,6 +220,7 @@ for iscan in range(1,nscans+1):
     else:
         print("Error! Check ConfigType parameter in ising.in")      
 
+    #   End of Config Chooser
     
     for ipass in range(0,npass+1):
         
@@ -273,15 +278,16 @@ for iscan in range(1,nscans+1):
     magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
     energyObj.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
 
-print("Program Completed")
+print("\n\nProgram Completed\n")
 
-spin.close()
+spin.close()            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
 temper.close()
-
+energyObj.close()
 
 Profiler = open("Program_Profile.txt","a+")
-time_elapsed=time.perf_counter()-time_start
+time_elapsed=time.perf_counter()-time_start     #   Program execuion time profiler
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
-ran0
+
+#   THE END
