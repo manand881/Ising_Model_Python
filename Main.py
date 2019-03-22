@@ -131,8 +131,8 @@ def pick_random():
 
 
 spin = open("spin-array", "w")
-spin.write("number of rows :"+str(nrows))
-spin.write("\nnumber of columns :"+str(ncols))
+spin.write("number of rows :"+str(iterator))
+spin.write("\nnumber of columns :"+str(iterator2))
 
 nscans=int((high_temp-low_temp)/temp_interval+1)
 
@@ -182,7 +182,7 @@ for iscan in range(1,nscans):
                 else:
                     dummyval=1
                 a[:,j]=dummyval
-        iterator=iterator2=dummyval=0   
+        dummyval=0   
 
     elif(ConfigType==3):
 
@@ -197,7 +197,7 @@ for iscan in range(1,nscans):
                 else:
                     dummyval=1
                 a[:,j]=dummyval
-        iterator=iterator2=dummyval=0
+        dummyval=0
         
     elif(ConfigType==4):
 
@@ -218,34 +218,34 @@ for iscan in range(1,nscans):
         print("Error! Check ConfigType parameter in ising.in")      
 
     
-    for i in range(ipass,npass):
+    for ipass in range(0,npass+1):
         
-        if(MovieOn and ipass%(npass/50)):
-            for i in range(1,nrows):
-                for j in range(1,ncols):
+        if(MovieOn and ipass%(npass/50)==0):
+            for i in range(0,iterator):
+                for j in range(0,iterator2):
                     spin.write(i,j,a[i,j])
 
         if(ipass>nequil):
            
             output_count+=1
-            magnetization = sum(a[1:nrows,1:ncols])/(ncols*nrows*1.00)
+            magnetization = sum(a[1:iterator,1:iterator2])/(iterator*iterator2*1.00)
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
            
-            for i in range(1,nrows):
-                for j in range(1,ncols):
+            for i in range(0,iterator):
+                for j in range(0,iterator2):
                    
                     energy = energy-a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
             
-            energy = energy / (ncols*nrows*2.0)
+            energy = energy / (iterator*iterator2*2.0)
             energy_ave = energy_ave + energy
             energy2_ave = energy2_ave + energy**2
 
         pick_random() 
-        m=int((nrows-1)*ran0+2)   
+        m=int((iterator-1)*ran0)  
         pick_random()
-        m=int((ncols-1)*ran0+2)
+        n=int((iterator2-1)*ran0)
         trial_spin=-1*(a[m,n]) 
 
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
@@ -257,18 +257,18 @@ for iscan in range(1,nscans):
             
             a[m,n]=trial_spin
             if(m==2):
-                a[nrows+2,n]=trial_spin
-            if(m==nrows+1):
-                a[1,n]=trial_spin
+                a[iterator-1,n]=trial_spin
+            if(m==iterator+1):
+                a[0,n]=trial_spin
             if(n==2):
-                a[m,ncols+2]=trial_spin
-            if(n==ncols+1):
+                a[m,iterator2-1]=trial_spin
+            if(n==iterator2+1):
                 a[m,1]=trial_spin
     
     if(MovieOn!=True):
         
-        for i in range(1,nrows):
-            for j in range(1,ncols):
+        for i in range(0,iterator):
+            for j in range(0,iterator2):
                 spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
     
     magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
@@ -284,3 +284,4 @@ Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
+ran0
