@@ -244,16 +244,18 @@ for iscan in range(1,nscans):
         m=int((nrows-1)*ran0+2)   
         pick_random()
         m=int((ncols-1)*ran0+2)
-        trial_spin=-a[m,n]   
+        trial_spin=-1*(a[m,n]) 
 
 
-        DeltaU = -trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2
+        DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
         pick_random()
         log_eta=math.log(ran0+(1e-10))
         if(-beta*DeltaU>log_eta):
             a[m,n]=trial_spin
             if(m==2):
-                a[nrows+2,n]=trial_spin
+                # a[nrows+2,n]=trial_spin
+                a[nrows,n]=trial_spin
+
             if(m==nrows+1):
                 a[1,n]=trial_spin
             if(n==2):
