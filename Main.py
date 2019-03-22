@@ -122,10 +122,12 @@ def matrix_row_col_check():
 
     a=numpy.ones((iterator,iterator2),dtype=int)
     
-def pick_random():
-    global ran0
-    ran0=round(random.uniform(0,1),12) 
 
+def pick_random():
+
+    global ran0
+    
+    ran0=round(random.uniform(0,1),12) 
 
 
 spin = open("spin-array", "w")
@@ -157,9 +159,7 @@ for iscan in range(1,nscans):
     print("Running Program for Temperature : "+str(temp))
     beta  =  1.0/temp
     output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
-    
-    
-    
+        
     if(ConfigType==1):
         
         # Checkerboard Pattern Matrix
@@ -217,7 +217,9 @@ for iscan in range(1,nscans):
     else:
         print("Error! Check ConfigType parameter in ising.in")      
 
+    
     for i in range(ipass,npass):
+        
         if(MovieOn and ipass%(npass/50)):
             for i in range(1,nrows):
                 for j in range(1,ncols):
@@ -246,16 +248,16 @@ for iscan in range(1,nscans):
         m=int((ncols-1)*ran0+2)
         trial_spin=-1*(a[m,n]) 
 
-
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
+        
         pick_random()
         log_eta=math.log(ran0+(1e-10))
+
         if(-beta*DeltaU>log_eta):
+            
             a[m,n]=trial_spin
             if(m==2):
-                # a[nrows+2,n]=trial_spin
-                a[nrows,n]=trial_spin
-
+                a[nrows+2,n]=trial_spin
             if(m==nrows+1):
                 a[1,n]=trial_spin
             if(n==2):
@@ -264,14 +266,15 @@ for iscan in range(1,nscans):
                 a[m,1]=trial_spin
     
     if(MovieOn!=True):
-        for i in range(1,nrows+1):
-            for j in range(1,ncols+1):
+        
+        for i in range(1,nrows):
+            for j in range(1,ncols):
                 spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
+    
     magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
     energy.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
 
 print("Program Completed")
-
 
 spin.close()
 magnet.close()
@@ -281,4 +284,3 @@ Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
 Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
 Profiler.close()
-print(ran0)
