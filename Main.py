@@ -72,7 +72,7 @@ stringreader=(ising.readline())
 npass=int(stringreader)
 
 next(ising)
-nequil=(ising.readline())
+stringreader=(ising.readline())
 nequil=int(stringreader)
 
 next(ising)
@@ -151,14 +151,13 @@ temper = open("temperature.dat","w+")
 temper.write("Temperature\t\t\ti\t\t\tj\t\t\tspin")
 magnet = open("magnetization","w+")
 magnet.write("Temp\t\t\tave_magnetization\t\t\tave_magnetization^2\t\t\tsusceptibility")
-energy = open("energy","w+")
-energy.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
+energyObj = open("energy","w+")
+energyObj.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
 
-for iscan in range(1,nscans):    
+for iscan in range(1,nscans+1):    
     temp = high_temp - temp_interval*(iscan-1)
     print("Running Program for Temperature : "+str(temp))
     beta  =  1.0/temp
-    output_count=energy_ave=energy2_ave=magnetization_ave=magnetization2_ave=0
         
     if(ConfigType==1):
         
@@ -272,13 +271,14 @@ for iscan in range(1,nscans):
                 spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
     
     magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
-    energy.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
+    energyObj.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
 
 print("Program Completed")
 
 spin.close()
 magnet.close()
 temper.close()
+
 
 Profiler = open("Program_Profile.txt","a+")
 time_elapsed=time.perf_counter()-time_start
