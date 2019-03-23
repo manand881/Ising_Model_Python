@@ -275,8 +275,8 @@ for iscan in range(1,nscans+1):                                 #   Main for loo
             for j in range(0,iterator2):
                 spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
     
-    magnet.write(""+str(temp)+"\t"+str(abs(magnetization_ave/output_count))+"\t"+str(magnetization2_ave/output_count))
-    energyObj.write(""+str(temp)+"\t"+str(energy_ave/output_count)+"\t"+str(energy2_ave/output_count)+"\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
+    magnet.write("\n"+str(temp)+"\t\t\t"+str(abs(magnetization_ave/output_count))+"\t\t\t"+str(magnetization2_ave/output_count))
+    energyObj.write("\n"+str(temp)+"\t\t\t"+str(energy_ave/output_count)+"\t\t\t"+str(energy2_ave/output_count)+"\t\t\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
 
 print("\n\nProgram Completed\n")
 
