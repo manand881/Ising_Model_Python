@@ -10,6 +10,7 @@ import numpy
 import random
 import time
 import math
+import csv
 
 time_start = time.perf_counter()    #   For Program Runtime Profiling. Time.clock() has been depreciated 
 
@@ -151,12 +152,11 @@ else:
     spin.write("\nnumber of scans :"+str(nscans))
     spin.write("\n2")
 
-temper = open("temperature.dat","w+")
-temper.write("Temperature\t\t\ti\t\t\tj\t\t\tspin")
-magnet = open("magnetization","w+")
-magnet.write("Temp\t\t\tave_magnetization\t\t\tave_magnetization^2\t\t\tsusceptibility")
+
+magnet = open("magnetization.csv","w+")
+magnet.write("Temp,ave_magnetization,ave_magnetization^2,susceptibility")
 energyObj = open("energy","w+")
-energyObj.write("temp ave_energy\t\t\tave_energy^2\t\t\tC_v")
+energyObj.write("temp ave_energy,ave_energy^2,C_v")
 
 for iscan in range(1,nscans+1):                                 #   Main for loop    
     temp = high_temp - temp_interval*(iscan-1)
@@ -282,7 +282,6 @@ print("\n\nProgram Completed\n")
 
 spin.close()            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
-temper.close()
 energyObj.close()
 
 Profiler = open("Program_Profile.txt","a+")
