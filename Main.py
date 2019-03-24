@@ -96,11 +96,11 @@ ConfigType=int(stringreader)
 next(ising)
 stringreader=(ising.readline())
 if(stringreader==".true.\n"):
-    MovieOn=True
+    MovieOn=True                           #    To be removed
 
 ising.close()
 
-a=numpy.zeros(shape=(nrows,ncols))          #   Creating a matrix of spins populated by zeros
+a=numpy.ones(shape=(nrows,ncols))          #   Creating a matrix of spins populated by zeros
 
 #   Funtions
 
@@ -118,9 +118,9 @@ def matrix_row_col_check():
     iterator2 = ncols
 
     if(nrows%2!=0):
-        iterator=nrows+1
+        iterator=+1
     if(ncols%2!=0):
-        iterator2=ncols+1
+        iterator2=+1
 
     a=numpy.ones((iterator,iterator2),dtype=int)
 
@@ -174,9 +174,15 @@ energy_writer=csv.writer(energyObj)
 for iscan in range(1,nscans+1):                                     #   Main for loop    
     temp = float(round((high_temp - temp_interval*(iscan-1)), 2))   #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
+    
     beta  =  1.0/temp
-        
-    if(ConfigType==1):                                          #   Section for choosing Configtype
+    output_count   =   0
+    energy_ave  =  0.0
+    energy2_ave  =  0.0
+    magnetization_ave  =  0.0
+    magnetization2_ave  =  0.0
+    
+    if(ConfigType==1):                                              #   Section for choosing Configtype
         
         #   Checkerboard Pattern Matrix
 
@@ -214,7 +220,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
                     dummyval=1
                 a[:,j]=dummyval
         dummyval=0
-        
+
     elif(ConfigType==4):
 
         #   Random Pattern Matrix
