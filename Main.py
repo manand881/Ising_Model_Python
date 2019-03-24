@@ -108,7 +108,7 @@ a=numpy.zeros(shape=(nrows,ncols))          #   Creating a matrix of spins popul
 
 def matrix_row_col_check():
     
-    global iterator
+    global iterator                         #   global is called to manipulate global variables
     global iterator2
     global nrows
     global ncols
@@ -171,8 +171,8 @@ energyObj.write("\n")
 energy_writer=csv.writer(energyObj)
 
 
-for iscan in range(1,nscans+1):                                 #   Main for loop    
-    temp = high_temp - temp_interval*(iscan-1)
+for iscan in range(1,nscans+1):                                     #   Main for loop    
+    temp = float(round((high_temp - temp_interval*(iscan-1)), 2))   #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     beta  =  1.0/temp
         
@@ -307,9 +307,9 @@ spin.close()            #   Closing open files.This part is important as open fi
 magnet.close()
 energyObj.close()
 
-Profiler = open("Program_Profile.txt","a+")
+Profiler = open("Program_Profile.csv","a+")
 time_elapsed=time.perf_counter()-time_start     #   Program execuion time profiler
-Profiler.write("Program took "+str(time_elapsed)+" seconds to run\n")
+Profiler.write("\n"+str(time_elapsed)+"")
 Profiler.close()
 
 #   THE END
