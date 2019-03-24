@@ -17,3 +17,5 @@ Program took 134.422193607 seconds to run
 Program took 155.55154886600002 seconds to run
 Program took 151.023992778 seconds to run
 Program took 140.424882891 seconds to run
+Program took 150.40282206199998 seconds to run
+Program took 150.932126633 seconds to run
