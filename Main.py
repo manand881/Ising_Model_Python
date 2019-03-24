@@ -38,8 +38,8 @@ iscan=1                 #   current number
 iscan1=0                #   current number
 MovieOn=None            #   set to .true. to make movie of 1 temp
 DeltaU=0                #   change in energy between 2 configs
-DeltaU1=0               #   energy changes for lattice gas
-DeltaU2=0               #   energy changes for lattice gas
+# DeltaU1=0               #   energy changes for lattice gas
+# DeltaU2=0               #   energy changes for lattice gas
 log_eta=0               #   log of random number to compare to
 magnetization=0         #   magnetization of all spins in lattice
 magnetization_ave=0     #   cumulative average magnetization
@@ -136,27 +136,40 @@ def pick_random():
 
 #   End of function
 
-spin = open("spin-array", "w")
-spin.write("number of rows :"+str(iterator))
-spin.write("\nnumber of columns :"+str(iterator2))
+spin_attribute = open("spin_array_attribute.csv", "w")
+spin_attribute.write("number of rows :"+str(iterator))
+spin_attribute.write("\nnumber of columns :"+str(iterator2))
 
 nscans=int((high_temp-low_temp)/temp_interval+1)    #   Determining the number of scans
 
 if(MovieOn==True):
 
-    spin.write("\n51")
-    spin.write("\n1")
+    spin_attribute.write("\n51")
+    spin_attribute.write("\n1")
 
 else:
     
-    spin.write("\nnumber of scans :"+str(nscans))
-    spin.write("\n2")
+    spin_attribute.write("\nnumber of scans :"+str(nscans))
+    spin_attribute.write("\n2")
 
+spin_attribute.close()
+
+spin = open("spin_array.csv","w+")
+spin_writer=csv.writer(spin)
+spin_row=["temp","i","j","a[i,j]"]
+spin_writer.writerow(spin_row)
 
 magnet = open("magnetization.csv","w+")
-magnet.write("Temp,ave_magnetization,ave_magnetization^2,susceptibility")
-energyObj = open("energy","w+")
-energyObj.write("temp ave_energy,ave_energy^2,C_v")
+magnet.write("Temp , Ave_magnetization , Ave_magnetization^2 , Susceptibility")
+magnet.write("\n")
+magnet_writer=csv.writer(magnet)
+
+
+energyObj = open("energy.csv","w+")
+energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
+energyObj.write("\n")
+energy_writer=csv.writer(energyObj)
+
 
 for iscan in range(1,nscans+1):                                 #   Main for loop    
     temp = high_temp - temp_interval*(iscan-1)
@@ -232,7 +245,7 @@ for iscan in range(1,nscans+1):                                 #   Main for loo
         if(ipass>nequil):
            
             output_count+=1
-            magnetization = sum(a[1:iterator,1:iterator2])/(iterator*iterator2*1.00)
+            magnetization = numpy.sum(a[iterator-1,iterator-1])/(iterator*iterator2*1.00)
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
@@ -273,12 +286,22 @@ for iscan in range(1,nscans+1):                                 #   Main for loo
         
         for i in range(0,iterator):
             for j in range(0,iterator2):
-                spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
+                # spin.write(""+str(temp)+"\t"+str(i)+"\t"+str(j)+"\t"+str(a[i,j]))
+                spin_row=[temp,i,j,a[i,j]]
+                spin_writer.writerow(spin_row)
     
-    magnet.write("\n"+str(temp)+"\t\t\t"+str(abs(magnetization_ave/output_count))+"\t\t\t"+str(magnetization2_ave/output_count))
-    energyObj.write("\n"+str(temp)+"\t\t\t"+str(energy_ave/output_count)+"\t\t\t"+str(energy2_ave/output_count)+"\t\t\t"+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
+    # magnet.write("\n"+str(temp)+","+str(abs(magnetization_ave/output_count))+","+str(magnetization2_ave/output_count))
+    # magnet_writer=csv.writer(magnet)
+    magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*(magnetization2_ave/output_count - (magnetization_ave/output_count)**2)]
+    magnet_writer.writerow(magnet_row)
+    
+    # energyObj.write("\n"+str(temp)+","+str(energy_ave/output_count)+","+str(energy2_ave/output_count)+","+str((beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)))
+    # energy_writer=csv.writer(energyObj)
+    energy_row=[temp , energy_ave/output_count , energy2_ave/output_count , (beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)]
+    energy_writer.writerow(energy_row)
 
-print("\n\nProgram Completed\n")
+
+print("\nProgram Completed\n")
 
 spin.close()            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
