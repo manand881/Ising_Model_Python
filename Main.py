@@ -52,7 +52,7 @@ ran0=0                  #   T B C
 # rand_uniform=0          #   T B C
 stringreader=""         #   variable to read files from text to be later converted to int
 iterator=0              #   to be used with for loop / dummy operation
-iterator2=0             #   to be used with for loop / dummy operations
+iterator2=0             #   to be used  for loop / dummy operations
 
 
 print("MONTE CARLO 2D ISING MODEL\n")
@@ -137,8 +137,8 @@ def pick_random():
 #   End of function
 
 spin_attribute = open("spin_array_attribute.csv", "w")
-spin_attribute.write("number of rows :"+str(iterator))
-spin_attribute.write("\nnumber of columns :"+str(iterator2))
+spin_attribute.write("number of rows :"+str(nrows))
+spin_attribute.write("\nnumber of columns :"+str(ncols))
 
 nscans=int((high_temp-low_temp)/temp_interval+1)    #   Determining the number of scans
 
@@ -170,6 +170,7 @@ energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
 energyObj.write("\n")
 energy_writer=csv.writer(energyObj)
 
+#   Scan Loop
 
 for iscan in range(1,nscans+1):                                     #   Main for loop    
     temp = float(round((high_temp - temp_interval*(iscan-1)), 2))   #   rounding off to two decimal places for optimisation purposes 
@@ -241,6 +242,8 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
     #   End of Config Chooser
     
+    #   Main loop containing Monte Carlo algorithm
+
     for ipass in range(0,npass+1):
         
         if(MovieOn and ipass%(npass/50)==0):
@@ -255,11 +258,11 @@ for iscan in range(1,nscans+1):                                     #   Main for
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
-           
+
             for i in range(0,iterator):
                 for j in range(0,iterator2):
                    
-                    energy = energy-a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
+                    energy = energy - a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
             
             energy = energy / (iterator*iterator2*2.0)
             energy_ave = energy_ave + energy
@@ -272,22 +275,31 @@ for iscan in range(1,nscans+1):                                     #   Main for
         trial_spin=-1*(a[m,n]) 
 
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
-        
+                
         pick_random()
         log_eta=math.log(ran0+(1e-10))
-
+        
         if(-beta*DeltaU>log_eta):
             
             a[m,n]=trial_spin
-            if(m==2):
+            if(m==1):
+
                 a[iterator-1,n]=trial_spin
-            if(m==iterator+1):
+            
+            if(m==iterator-2):
+                
                 a[0,n]=trial_spin
-            if(n==2):
+            
+            if(n==1):
+                
                 a[m,iterator2-1]=trial_spin
-            if(n==iterator2+1):
-                a[m,1]=trial_spin
+            
+            if(n==iterator2-2):
+                
+                a[m,0]=trial_spin
     
+    #   End Monte carlo pases
+
     if(MovieOn!=True):
         
         for i in range(0,iterator):
@@ -297,7 +309,6 @@ for iscan in range(1,nscans+1):                                     #   Main for
                 spin_writer.writerow(spin_row)
     
     # magnet.write("\n"+str(temp)+","+str(abs(magnetization_ave/output_count))+","+str(magnetization2_ave/output_count))
-    # magnet_writer=csv.writer(magnet)
     magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*(magnetization2_ave/output_count - (magnetization_ave/output_count)**2)]
     magnet_writer.writerow(magnet_row)
     
@@ -306,6 +317,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
     energy_row=[temp , energy_ave/output_count , energy2_ave/output_count , (beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)]
     energy_writer.writerow(energy_row)
 
+#   End Scan Loop
 
 print("\nProgram Completed\n")
 

@@ -13,7 +13,7 @@ low_temp - temperature to finish scan at
 temp_interval - scanning interval
 0.1
 ConfigType - 1: checkerboard, 2: interface, 3: unequal interface, 4: Random Matrix
-3
+4
 MovieOn - set to .true. when running for 1 temp to make movie
 .false.
 End of file.
