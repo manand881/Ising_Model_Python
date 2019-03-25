@@ -254,7 +254,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
         if(ipass>nequil):
            
             output_count+=1
-            magnetization = numpy.sum(a[iterator-1,iterator-1])/(iterator*iterator2*1.00)
+            magnetization = numpy.sum(a[1:iterator-1,1:iterator-1])/(iterator*iterator2*1.00)
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
