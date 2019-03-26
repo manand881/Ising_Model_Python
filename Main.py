@@ -5,7 +5,7 @@
 #   Python 3.7.
 #   NumPy has been installed and used in this project.
 #   tools used: Visual Studio Code, GitHub Desktop.
-
+from numba import jit
 import numpy
 import random
 import time
@@ -106,6 +106,7 @@ a=numpy.ones(shape=(nrows,ncols))          #   Creating a matrix of spins popula
 
 #   Function to determine the number of rows and columns the spin matrix must have
 
+@jit
 def matrix_row_col_check():
     
     global iterator                         #   global is called to manipulate global variables
@@ -128,6 +129,7 @@ def matrix_row_col_check():
 
 #   Function to generate uniform random numbers
 
+@jit
 def pick_random():
 
     global ran0
@@ -163,7 +165,6 @@ magnet = open("magnetization.csv","w+")
 magnet.write("Temp , Ave_magnetization , Ave_magnetization^2 , Susceptibility")
 magnet.write("\n")
 magnet_writer=csv.writer(magnet)
-
 
 energyObj = open("energy.csv","w+")
 energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
@@ -278,12 +279,11 @@ for iscan in range(1,nscans+1):                                     #   Main for
                 
         pick_random()
         log_eta=math.log(ran0+(1e-10))
-        # log_eta=math.log(ran0)
-
         
         if(-beta*DeltaU>log_eta):
             
             a[m,n]=trial_spin
+
             if(m==1):
 
                 a[iterator-1,n]=trial_spin
@@ -323,12 +323,12 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
 print("\nProgram Completed\n")
 
-spin.close()            #   Closing open files.This part is important as open files may not allow writing of new data
+spin.close()                                            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
 energyObj.close()
 
 Profiler = open("Program_Profile.csv","a+")
-time_elapsed=time.perf_counter()-time_start     #   Program execuion time profiler
+time_elapsed=time.perf_counter()-time_start             #   Program execuion time profiler
 Profiler.write("\n"+str(time_elapsed)+"")
 Profiler.close()
 
