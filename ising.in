@@ -1,11 +1,11 @@
 nrows - number of rows of spins (even number)
-10
+20
 ncols - number of columns of spins (even number)
-10
+20
 npass - number of passes for each temperature
-160000
+4000
 nequil - number of equilibration steps for each temperature
-60000
+2000
 high_temp - temperature to start scan at
 2.92
 low_temp - temperature to finish scan at

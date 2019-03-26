@@ -5,6 +5,7 @@
 #   Python 3.7.
 #   NumPy has been installed and used in this project.
 #   tools used: Visual Studio Code, GitHub Desktop.
+
 from numba import jit
 import numpy
 import random
@@ -98,43 +99,32 @@ stringreader=(ising.readline())
 if(stringreader==".true.\n"):
     MovieOn=True                           #    To be removed
 
+
+
 ising.close()
 
-a=numpy.ones(shape=(nrows,ncols))          #   Creating a matrix of spins populated by zeros
+
+
+iterator = nrows
+iterator2 = ncols
+
+if(nrows%2!=0):
+    iterator+=1
+if(ncols%2!=0):
+    iterator2+=1
+
+a=numpy.ones((iterator,iterator2),dtype=int)
 
 #   Funtions
 
-#   Function to determine the number of rows and columns the spin matrix must have
-
-@jit
-def matrix_row_col_check():
-    
-    global iterator                         #   global is called to manipulate global variables
-    global iterator2
-    global nrows
-    global ncols
-    global a
-
-    iterator = nrows
-    iterator2 = ncols
-
-    if(nrows%2!=0):
-        iterator+=1
-    if(ncols%2!=0):
-        iterator2+=1
-
-    a=numpy.ones((iterator,iterator2),dtype=int)
-
-#   End of Function
-
 #   Function to generate uniform random numbers
 
-@jit
-def pick_random():
-
-    global ran0
+@jit(parallel=True)
+def pick_random(ran0):
     
-    ran0=round(random.uniform(0,1),12) 
+    ran0=round(random.uniform(0,1),12)
+    
+    return ran0 
 
 #   End of function
 
@@ -188,7 +178,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
         
         #   Checkerboard Pattern Matrix
 
-        matrix_row_col_check()        
+        # matrix_row_col_check()        
         
         a[1::2,::2] = -1
         a[::2,1::2] = -1
@@ -197,7 +187,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
         
         #   Interface Pattern Matrix
 
-        matrix_row_col_check()
+        # matrix_row_col_check()
 
         for i in range(0,iterator):
             for j in range(0,iterator2):
@@ -212,7 +202,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
         #   Unequal Interface Pattern Matrix
 
-        matrix_row_col_check()
+        # matrix_row_col_check()
 
         for i in range(0,iterator):
             for j in range(0,iterator2):
@@ -227,7 +217,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
         #   Random Pattern Matrix
 
-        matrix_row_col_check()
+        # matrix_row_col_check()
         
         for i in range(0,iterator):
             for j in range(0,iterator2):
@@ -269,15 +259,15 @@ for iscan in range(1,nscans+1):                                     #   Main for
             energy_ave = energy_ave + energy
             energy2_ave = energy2_ave + energy**2
 
-        pick_random() 
+        ran0=pick_random(ran0) 
         m=int((iterator-2)*ran0)  
-        pick_random()
+        ran0=pick_random(ran0)
         n=int((iterator2-2)*ran0)
         trial_spin=-1*(a[m,n]) 
 
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
                 
-        pick_random()
+        ran0=pick_random(ran0)
         log_eta=math.log(ran0+(1e-10))
         
         if(-beta*DeltaU>log_eta):
@@ -328,7 +318,7 @@ magnet.close()
 energyObj.close()
 
 Profiler = open("Program_Profile.csv","a+")
-time_elapsed=time.perf_counter()-time_start             #   Program execuion time profiler
+time_elapsed=(round(time.perf_counter()-time_start),5)             #   Program execuion time profiler
 Profiler.write("\n"+str(time_elapsed)+"")
 Profiler.close()
 
