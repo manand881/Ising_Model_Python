@@ -118,9 +118,9 @@ def matrix_row_col_check():
     iterator2 = ncols
 
     if(nrows%2!=0):
-        iterator=+1
+        iterator+=1
     if(ncols%2!=0):
-        iterator2=+1
+        iterator2+=1
 
     a=numpy.ones((iterator,iterator2),dtype=int)
 
@@ -173,7 +173,7 @@ energy_writer=csv.writer(energyObj)
 #   Scan Loop
 
 for iscan in range(1,nscans+1):                                     #   Main for loop    
-    temp = float(round((high_temp - temp_interval*(iscan-1)), 2))   #   rounding off to two decimal places for optimisation purposes 
+    temp = float(round((high_temp - temp_interval*(iscan-1)), 3))   #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     
     beta  =  1.0/temp
@@ -269,15 +269,17 @@ for iscan in range(1,nscans+1):                                     #   Main for
             energy2_ave = energy2_ave + energy**2
 
         pick_random() 
-        m=int((iterator-1)*ran0)  
+        m=int((iterator-2)*ran0)  
         pick_random()
-        n=int((iterator2-1)*ran0)
+        n=int((iterator2-2)*ran0)
         trial_spin=-1*(a[m,n]) 
 
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
                 
         pick_random()
         log_eta=math.log(ran0+(1e-10))
+        # log_eta=math.log(ran0)
+
         
         if(-beta*DeltaU>log_eta):
             
@@ -286,7 +288,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
                 a[iterator-1,n]=trial_spin
             
-            if(m==iterator-2):
+            if(m==iterator-1):
                 
                 a[0,n]=trial_spin
             
@@ -294,7 +296,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
                 
                 a[m,iterator2-1]=trial_spin
             
-            if(n==iterator2-2):
+            if(n==iterator2-1):
                 
                 a[m,0]=trial_spin
     
