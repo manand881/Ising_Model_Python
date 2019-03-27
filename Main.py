@@ -13,17 +13,10 @@ import time
 import math
 import csv
 
-checker_test=0
-
-
-
-
-
-
-
 
 
 time_start = time.perf_counter()    #   For Program Runtime Profiling. Time.clock() has been depreciated 
+
 
 
 i=0                     #   Dummy Intgers
@@ -259,7 +252,6 @@ for iscan in range(1,nscans+1):                                     #   Main for
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
-            checker_test+=1
 
             for i in range(0,iterator):
                 for j in range(0,iterator2):
@@ -323,14 +315,6 @@ for iscan in range(1,nscans+1):                                     #   Main for
 #   End Scan Loop
 
 print("\nProgram Completed\n")
-
-print(checker_test)
-
-
-
-
-
-
 
 
 
