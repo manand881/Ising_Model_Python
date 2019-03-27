@@ -4,7 +4,8 @@
 #   Written by Anand Mahesh.
 #   Python 3.7.
 #   NumPy has been installed and used in this project.
-#   tools used: Visual Studio Code, GitHub Desktop.
+#   Numba has been installed and used in this project.
+#   Tools used: Visual Studio Code, GitHub Desktop.
 
 from numba import jit
 
@@ -105,6 +106,8 @@ if(nrows%2!=0):
 if(ncols%2!=0):
     iterator2+=1
 
+print("Running program for %d rows and %d columns",iterator,iterator2)
+
 a=numpy.ones((iterator,iterator2),dtype=int)
 start_matrix=numpy.ones((iterator,iterator2),dtype=int)
 
@@ -123,7 +126,7 @@ spin_attribute = open("spin_array_attribute.csv", "w")
 spin_attribute.write("number of rows :"+str(nrows))
 spin_attribute.write("\nnumber of columns :"+str(ncols))
 
-nscans=int((high_temp-low_temp)/temp_interval+1)    #   Determining the number of scans
+nscans=int((high_temp-low_temp)/temp_interval+1)        #   Determining the number of scans
 
 spin_attribute.write("\n51")
 spin_attribute.write("\n1")
@@ -145,9 +148,9 @@ energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
 energyObj.write("\n")
 energy_writer=csv.writer(energyObj)
 
+#   Section for choosing Configtype
 
-
-if(ConfigType==1):                                              #   Section for choosing Configtype
+if(ConfigType==1):                                              
         
     #   Checkerboard Pattern Matrix
                 
@@ -198,8 +201,8 @@ else:
 
 #   Scan Loop
 
-for iscan in range(1,nscans+1):                                     #   Main for loop    
-    temp = float(round((high_temp - temp_interval*(iscan-1)), 3))   #   rounding off to two decimal places for optimisation purposes 
+for iscan in range(1,nscans+1):                                         #   Main for loop    
+    temp = float(round((high_temp - temp_interval*(iscan-1)), 3))       #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     
     beta  =  1.0/temp
@@ -281,7 +284,7 @@ magnet.close()
 energyObj.close()
 
 Profiler = open("Program_Profile.csv","a+")
-time_elapsed=(time.perf_counter()-time_start)             #   Program execuion time profiler
+time_elapsed=(time.perf_counter()-time_start)           #   Program execuion time profiler
 Profiler.write("\n"+str(time_elapsed)+"")
 Profiler.close()
 
