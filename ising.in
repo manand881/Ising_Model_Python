@@ -3,15 +3,15 @@ nrows - number of rows of spins (even number)
 ncols - number of columns of spins (even number)
 20
 npass - number of passes for each temperature
-4000
+4200
 nequil - number of equilibration steps for each temperature
-2000
+2200
 high_temp - temperature to start scan at
-2.92
+4.0
 low_temp - temperature to finish scan at
 0.92
 temp_interval - scanning interval
-0.05
+0.01
 ConfigType - 1: checkerboard, 2: interface, 3: unequal interface, 4: Random Matrix
 1
 MovieOn - set to .true. when running for 1 temp to make movie
