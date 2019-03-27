@@ -13,6 +13,16 @@ import time
 import math
 import csv
 
+checker_test=0
+
+
+
+
+
+
+
+
+
 time_start = time.perf_counter()    #   For Program Runtime Profiling. Time.clock() has been depreciated 
 
 
@@ -249,6 +259,7 @@ for iscan in range(1,nscans+1):                                     #   Main for
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
+            checker_test+=1
 
             for i in range(0,iterator):
                 for j in range(0,iterator2):
@@ -313,12 +324,22 @@ for iscan in range(1,nscans+1):                                     #   Main for
 
 print("\nProgram Completed\n")
 
+print(checker_test)
+
+
+
+
+
+
+
+
+
 spin.close()                                            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
 energyObj.close()
 
 Profiler = open("Program_Profile.csv","a+")
-time_elapsed=(round(time.perf_counter()-time_start),5)             #   Program execuion time profiler
+time_elapsed=(time.perf_counter()-time_start)             #   Program execuion time profiler
 Profiler.write("\n"+str(time_elapsed)+"")
 Profiler.close()
 
