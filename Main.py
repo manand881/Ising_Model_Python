@@ -170,8 +170,8 @@ if(ConfigType==1):
         
     #   Checkerboard Pattern Matrix
                 
-    a[1::2,::2] = -1
-    a[::2,1::2] = -1
+    start_matrix[1::2,::2] = -1
+    start_matrix[::2,1::2] = -1
 
 elif(ConfigType==2):
         
