@@ -7,6 +7,7 @@
 #   Numba has been installed and used in this project.
 #   Tools used: Visual Studio Code, GitHub Desktop.
 
+from input_param_reader import ising_input
 from numba import jit
 
 import itertools
@@ -52,7 +53,6 @@ energy_ave=0            #   cumulative average of energy
 energy2_ave=0           #   cumulative average of energy squared
 output_count=0          #   Number of times things have been added to averages
 ran0=0                  #   T B C
-stringreader=""         #   variable to read files from text to be later converted to int
 iterator=0              #   to be used with for loop / dummy operation
 iterator2=0             #   to be used  for loop / dummy operations
 Done=False              #   Program run status
@@ -62,45 +62,11 @@ print("MONTE CARLO 2D ISING MODEL\n")
 print("Monte Carlo Statistics for 2D Ising Model with periodic boundary conditions\n")
 print("The critical temperature is approximately 2.3, as seen on Chandler p. 123.\n")
 
-ising = open("ising.in", "r")       #   This section is for reading input parameters and assigning it to global variables
-                                       
-next(ising)
-stringreader=(ising.readline())
-nrows=int(stringreader)
+#   This section is for reading input parameters and assigning it to global variables
 
-next(ising)
-stringreader=(ising.readline())
-ncols=int(stringreader)
+nrows,ncols,npass,nequil,high_temp,low_temp,temp_interval,ConfigType=ising_input()
 
-next(ising)
-stringreader=(ising.readline())
-npass=int(stringreader)
-
-next(ising)
-stringreader=(ising.readline())
-nequil=int(stringreader)
-
-next(ising)
-stringreader=(ising.readline())
-high_temp=float(stringreader)
-
-next(ising)
-stringreader=(ising.readline())
-low_temp=float(stringreader)
-
-next(ising)
-stringreader=(ising.readline())
-temp_interval=float(stringreader)
-
-next(ising)
-stringreader=(ising.readline())
-ConfigType=int(stringreader)
-
-ising.close()
-
-
-
-# End of input parameter reader section
+#   End of input parameter reader section
 
 iterator = nrows
 iterator2 = ncols
@@ -135,12 +101,12 @@ def pick_random(ran0):
 
 
 spin_attribute = open("spin_array_attribute.csv", "w")
-spin_attribute.write("number of rows :"+str(nrows))
-spin_attribute.write("\nnumber of columns :"+str(ncols))
+spin_attribute.write("number of rows        :"+str(nrows))
+spin_attribute.write("\nnumber of columns   :"+str(ncols))
 
 nscans=int((high_temp-low_temp)/temp_interval+1)        #   Determining the number of scans
 
-spin_attribute.write("\nnumber of scans :"+str(nscans))
+spin_attribute.write("\nnumber of scans     :"+str(nscans))
 spin_attribute.write("\n2")
 
 spin_attribute.close()
