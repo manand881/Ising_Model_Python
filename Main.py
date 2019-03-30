@@ -55,7 +55,6 @@ output_count=0          #   Number of times things have been added to averages
 ran0=0                  #   T B C
 iterator=0              #   to be used with for loop / dummy operation
 iterator2=0             #   to be used  for loop / dummy operations
-Done=False              #   Program run status
 
 print("\n")
 print("MONTE CARLO 2D ISING MODEL\n")
@@ -64,7 +63,7 @@ print("The critical temperature is approximately 2.3, as seen on Chandler p. 123
 
 #   This section is for reading input parameters and assigning it to global variables
 
-nrows,ncols,npass,nequil,high_temp,low_temp,temp_interval,ConfigType=ising_input()
+nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType=ising_input()
 
 #   End of input parameter reader section
 
@@ -77,6 +76,8 @@ if(ncols%2!=0):
     iterator2+=1
 
 print("Running program for %d rows and %d columns\n" % (iterator,iterator2))
+
+#   Matrix arrays are stored as a[depth,row,column] manner in Numpy
 
 a=numpy.ones((iterator,iterator2),dtype=int)
 start_matrix=numpy.ones((iterator,iterator2),dtype=int)
@@ -95,6 +96,16 @@ def pick_random(ran0):
     ran0=round(random.uniform(0,1),12)
     
     return ran0 
+
+#   End of function
+
+
+
+#   Function to obtain magnetization value
+
+@jit(nopython=True)
+def magnetization_sum(iterator,iterator2,a):
+    return numpy.sum(a[0:nlayers,1:iterator-2,1:iterator-2])/(nlayers*iterator*iterator2*1.0)
 
 #   End of function
 
@@ -136,15 +147,15 @@ if(ConfigType==1):
         
     #   Checkerboard Pattern Matrix
                 
-    start_matrix[1::2,::2] = -1
-    start_matrix[::2,1::2] = -1
+    start_matrix[1::2,::2] = -1             #   Row
+    start_matrix[::2,1::2] = -1             #   Column
 
 elif(ConfigType==2):
         
     #   Interface Pattern Matrix
 
-    for i in range(0,iterator):
-        for j in range(0,iterator2):
+    for i in range(0,iterator):             #   Row
+        for j in range(0,iterator2):        #   Column
             if(j>=iterator2/2):
                 dummyval=-1
             else:
@@ -156,8 +167,8 @@ elif(ConfigType==3):
 
     #   Unequal Interface Pattern Matrix
 
-    for i in range(0,iterator):
-        for j in range(0,iterator2):
+    for i in range(0,iterator):             #   Row
+        for j in range(0,iterator2):        #   Column
             if(j>=iterator2/4):
                 dummyval=-1
             else:
@@ -169,8 +180,8 @@ elif(ConfigType==4):
 
 #   Random Pattern Matrix
     
-    for i in range(0,iterator):
-        for j in range(0,iterator2):
+    for i in range(0,iterator):             #   Row
+        for j in range(0,iterator2):        #   Column
             dummy=pick_random(ran0)
             if(dummy>=0.5):
                 dummy=1
@@ -191,14 +202,14 @@ for iscan in range(1,nscans+1):                                         #   Main
     temp = float(round((high_temp - temp_interval*(iscan-1)), 3))       #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     
-    beta  =  1.0/temp
+    beta  =  1.0/temp                           #   Reseting variables to initial values
     output_count   =   0
     energy_ave  =  0.0
     energy2_ave  =  0.0
     magnetization_ave  =  0.0
     magnetization2_ave  =  0.0
     
-    a=start_matrix
+    a=start_matrix                              #   Reseting matrix a to initial congiguration
 
     #   Main loop containing Monte Carlo algorithm
 
@@ -207,13 +218,15 @@ for iscan in range(1,nscans+1):                                         #   Main
         if(ipass>nequil):
            
             output_count+=1
-            magnetization = numpy.sum(a[1:iterator-2,1:iterator-2])/(iterator*iterator2*1.00)
+            
+            magnetization = magnetization_sum(nlayers, iterator, iterator2, a)     #   Calling magnetization summing function 
+            # magnetization = numpy.sum(a[1:iterator-2,1:iterator2-2])/(iterator*iterator2*1.00)
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
             energy = 0.00
 
-            for i in range(0,iterator):
-                for j in range(0,iterator2):
+            for i in range(0,iterator):             #   Row
+                for j in range(0,iterator2):        #   Column
                    
                     energy = energy - a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
             
@@ -222,9 +235,9 @@ for iscan in range(1,nscans+1):                                         #   Main
             energy2_ave = energy2_ave + energy**2
 
         ran0=pick_random(ran0) 
-        m=int((iterator-2)*ran0)  
+        m=int((iterator-2)*ran0)                    #   Picking random spin row number
         ran0=pick_random(ran0)
-        n=int((iterator2-2)*ran0)
+        n=int((iterator2-2)*ran0)                   #   Picking random spin column number
         trial_spin=-1*(a[m,n]) 
 
         DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
@@ -248,10 +261,14 @@ for iscan in range(1,nscans+1):                                         #   Main
             if(n==iterator2-1):                
                 a[m,0]=trial_spin
     
+
+
     #   End Monte carlo pases
 
-    for i in range(0,iterator):
-        for j in range(0,iterator2):
+
+
+    for i in range(0,iterator):                 #   Rows
+        for j in range(0,iterator2):            #   Columns
             spin_row=[temp,i,j,a[i,j]]
             spin_writer.writerow(spin_row)
     
