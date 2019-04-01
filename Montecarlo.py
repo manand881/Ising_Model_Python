@@ -1,7 +1,21 @@
-from Main import pick_random
+from numba import jit
+
+import random
 import numpy
 import math
 
+#   Function to generate uniform random numbers
+
+@jit(parallel=True)
+def pick_random(ran0):
+    
+    ran0=round(random.uniform(0,1),12)
+    
+    return ran0 
+
+#   End of function
+
+@jit(nopython=True)
 def Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave ):
     
     for ipass in range(0,npass+1):
@@ -49,3 +63,7 @@ def Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , r
                 
                 if(n==iterator2-1):                
                     a[m,0]=trial_spin
+
+
+
+    return m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave
