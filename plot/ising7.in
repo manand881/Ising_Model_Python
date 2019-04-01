@@ -1,0 +1,29 @@
+nrows - number of rows of spins (even number)
+<<<<<<< HEAD:ising.in
+100
+ncols - number of columns of spins (even number)
+100
+npass - number of passes for each temperature
+2000000
+nequil - number of equilibration steps for each temperature
+1000000
+=======
+50
+ncols - number of columns of spins (even number)
+50
+npass - number of passes for each temperature
+50000
+nequil - number of equilibration steps for each temperature
+35000
+>>>>>>> 97d78823643fff571fb5a5d5064ef5b062c95067:plot/ising7.in
+high_temp - temperature to start scan at
+4.0
+low_temp - temperature to finish scan at
+0.92
+temp_interval - scanning interval
+0.01
+ConfigType - 1: checkerboard, 2: interface, 3: unequal interface, 4: Random Matrix
+1
+MovieOn - set to .true. when running for 1 temp to make movie
+.false.
+End of file.
