@@ -6,7 +6,7 @@ import math
 
 #   Function to generate uniform random numbers
 
-@jit(parallel=True)
+@jit(nopython=True)
 def pick_random(ran0):
     
     ran0=round(random.uniform(0,1),12)
