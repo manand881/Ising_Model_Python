@@ -7,18 +7,18 @@
 #   Numba has been installed and used in this project.
 #   Tools used: Visual Studio Code, GitHub Desktop.
 
-from input_param_reader import ising_input
-from Montecarlo import Monte_Carlo
-from numba import jit
 
-import itertools
-import threading
-import random
-import numpy
+
+from input_param_reader     import ising_input      #   Python Function in the same directory as the Main.py File
+from Montecarlo             import Monte_Carlo      #   Python Function in the same directory as the Main.py File
+from numba                  import jit              #   Python Package to be downloaded manually 
+
+import random                                       #   Python Package to be downloaded manually. Used to generate random numbers
+import numpy                                        #   Python Package to be downloaded manually. Used to perform matrix operations
 import time
 import math
 import csv
-import sys
+
 
 
 time_start = time.perf_counter()    #   For Program Runtime Profiling. Time.clock() has been depreciated 
@@ -64,7 +64,7 @@ print("The critical temperature is approximately 2.3, as seen on Chandler p. 123
 
 #   This section is for reading input parameters and assigning it to global variables
 
-nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType=ising_input()
+nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType=ising_input()       #   Importing input parameters
 
 #   End of input parameter reader section
 
@@ -82,8 +82,8 @@ print("Running program for %d rows and %d columns\n" % (iterator,iterator2))
 
 
 
-start_matrix=numpy.ones((iterator,iterator2),dtype=int)
-a=start_matrix
+start_matrix = numpy.ones((iterator,iterator2),dtype=int)
+a = start_matrix
 
 
 

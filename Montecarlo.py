@@ -4,6 +4,8 @@ import random
 import numpy
 import math
 
+
+
 #   Function to generate uniform random numbers
 
 @jit(nopython=True)
@@ -14,6 +16,47 @@ def pick_random(ran0):
     return ran0 
 
 #   End of function
+
+
+
+#   Function to flip spins
+
+@jit(nopython=True)
+def Spin_Flip(ran0,m,n,iterator,iterator2,DeltaU,a,beta):
+    ran0=pick_random(ran0) 
+    m=int((iterator-2)*ran0)  
+    ran0=pick_random(ran0)
+    n=int((iterator2-2)*ran0)
+    trial_spin=-1*(a[m,n]) 
+
+    DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
+            
+    ran0=pick_random(ran0)
+    log_eta=math.log(ran0+(1e-10))
+    
+    if(-beta*DeltaU>log_eta):
+        
+        a[m,n]=trial_spin
+
+        if(m==1):
+            a[iterator-1,n]=trial_spin
+        
+        if(m==iterator-1):
+            a[0,n]=trial_spin
+        
+        if(n==1):
+            a[m,iterator2-1]=trial_spin
+        
+        if(n==iterator2-1):                
+            a[m,0]=trial_spin
+
+    return a
+
+#   End of function
+
+
+
+#   Function to perfrom Montecarlo loop
 
 @jit(nopython=True)
 def Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave ):
@@ -37,33 +80,12 @@ def Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , r
                 energy_ave = energy_ave + energy
                 energy2_ave = energy2_ave + energy**2
 
-            ran0=pick_random(ran0) 
-            m=int((iterator-2)*ran0)  
-            ran0=pick_random(ran0)
-            n=int((iterator2-2)*ran0)
-            trial_spin=-1*(a[m,n]) 
-
-            DeltaU = -1*(trial_spin*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])*2)
-                    
-            ran0=pick_random(ran0)
-            log_eta=math.log(ran0+(1e-10))
-            
-            if(-beta*DeltaU>log_eta):
-                
-                a[m,n]=trial_spin
-
-                if(m==1):
-                    a[iterator-1,n]=trial_spin
-                
-                if(m==iterator-1):
-                    a[0,n]=trial_spin
-                
-                if(n==1):
-                    a[m,iterator2-1]=trial_spin
-                
-                if(n==iterator2-1):                
-                    a[m,0]=trial_spin
 
 
+            a=Spin_Flip(ran0,m,n,iterator,iterator2,DeltaU,a,beta)
+
+ 
 
     return m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave
+
+    #   End of function
