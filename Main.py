@@ -105,7 +105,7 @@ def pick_random(ran0):
 
 @jit(nopython=True)
 def magnetization_sum(iterator,iterator2,a):
-    return numpy.sum(a[0:nlayers,1:iterator-2,1:iterator-2])/(nlayers*iterator*iterator2*1.0)
+    return numpy.sum(a[1:iterator-2,1:iterator2-2])/(iterator*iterator2*1.0)
 
 #   End of function
 
@@ -203,8 +203,8 @@ for iscan in range(1,nscans+1):                                         #   Main
     print("Running Program for Temperature : "+str(temp)+"\n")
     
     beta  =  1.0/temp                           #   Reseting variables to initial values
-    output_count   =   0
-    energy_ave  =  0.0
+    output_count   =    0
+    energy_ave  =   0.0
     energy2_ave  =  0.0
     magnetization_ave  =  0.0
     magnetization2_ave  =  0.0
@@ -219,7 +219,7 @@ for iscan in range(1,nscans+1):                                         #   Main
            
             output_count+=1
             
-            magnetization = magnetization_sum(nlayers, iterator, iterator2, a)     #   Calling magnetization summing function 
+            magnetization = magnetization_sum( iterator, iterator2, a)     #   Calling magnetization summing function 
             # magnetization = numpy.sum(a[1:iterator-2,1:iterator2-2])/(iterator*iterator2*1.00)
             magnetization_ave = magnetization_ave + magnetization
             magnetization2_ave = magnetization2_ave + magnetization**2
