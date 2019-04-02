@@ -1,4 +1,4 @@
-def ising_input():
+def Ising_input():
 
     nrows = 20              #  number of rows of spins (even number)
     

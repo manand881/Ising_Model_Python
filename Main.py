@@ -9,7 +9,7 @@
 
 
 
-from input_param_reader     import ising_input      #   Python Function in the same directory as the Main.py File
+from Input_param_reader     import Ising_input      #   Python Function in the same directory as the Main.py File
 from Montecarlo             import Monte_Carlo      #   Python Function in the same directory as the Main.py File
 from numba                  import jit              #   Python Package to be downloaded manually 
 
@@ -18,6 +18,7 @@ import numpy                                        #   Python Package to be dow
 import time
 import math
 import csv
+import os 
 
 
 
@@ -64,12 +65,12 @@ print("The critical temperature is approximately 2.3, as seen on Chandler p. 123
 
 #   This section is for reading input parameters and assigning it to global variables
 
-nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType=ising_input()       #   Importing input parameters
+nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType = Ising_input()       #   Importing input parameters
 
 #   End of input parameter reader section
 
-iterator = nrows
-iterator2 = ncols
+iterator = nrows        #   Setting iterator to be used as number of rows value
+iterator2 = ncols       #   Setting iterator to be used as number of columns value
 
 if(nrows%2!=0):
     iterator+=1
@@ -113,6 +114,7 @@ def magnetization_sum(iterator,iterator2,a):
 #   End of function
 
 
+os.mkdir('Output Files')
 
 spin_attribute = open("spin_array_attribute.csv", "w")
 spin_attribute.write("number of rows        :"+str(nrows))
@@ -205,12 +207,12 @@ for iscan in range(1,nscans+1):                                         #   Main
     temp = float(round((high_temp - temp_interval*(iscan-1)), 3))       #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     
-    beta  =  1.0/temp                           #   Reseting variables to initial values
-    output_count   =    0
-    energy_ave  =   0.0
-    energy2_ave  =  0.0
-    magnetization_ave  =  0.0
-    magnetization2_ave  =  0.0
+    beta = 1.0/temp                           #   Reseting variables to initial values
+    output_count = 0
+    energy_ave = 0.0
+    energy2_ave = 0.0
+    magnetization_ave = 0.0
+    magnetization2_ave = 0.0
     
     a=start_matrix                              #   Reseting matrix a to initial congiguration
 
@@ -238,6 +240,8 @@ for iscan in range(1,nscans+1):                                         #   Main
     
     energy_row=[temp , energy_ave/output_count , energy2_ave/output_count , (beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)]
     energy_writer.writerow(energy_row)
+
+
 
 #   End Scan Loop
 
