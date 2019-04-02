@@ -12,6 +12,7 @@
 from Input_param_reader     import Ising_input      #   Python Function in the same directory as the Main.py File
 from Montecarlo             import Monte_Carlo      #   Python Function in the same directory as the Main.py File
 from numba                  import jit              #   Python Package to be downloaded manually 
+from Path                   import Output_Path_Set  #   Python Function to create output folder by date and time and set it as working directory
 
 import random                                       #   Python Package to be downloaded manually. Used to generate random numbers
 import numpy                                        #   Python Package to be downloaded manually. Used to perform matrix operations
@@ -113,10 +114,23 @@ def magnetization_sum(iterator,iterator2,a):
 
 #   End of function
 
+path=Output_Path_Set()
 
-os.mkdir('Output Files')
+# nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType
 
-spin_attribute = open("spin_array_attribute.csv", "w")
+input_config=open("Input_Config.csv","w+")                                #   To write input configuration to output folder in a seperate file for future use.
+input_config.write("Number of Rows          :"+str(nrows))              
+input_config.write("\nNumber of Columns       :"+str(ncols))
+input_config.write("\nValue of npass          :"+str(npass))
+input_config.write("\nValue of nequil         :"+str(nequil))
+input_config.write("\nValue of high_temp      :"+str(high_temp))
+input_config.write("\nValue of low_temp       :"+str(low_temp))
+input_config.write("\nValue of temp_interval  :"+str(temp_interval))
+input_config.write("\nConfigType              :"+str(ConfigType))
+input_config.close()
+
+
+spin_attribute = open("Spin_Array_Attribute.csv", "w")
 spin_attribute.write("number of rows        :"+str(nrows))
 spin_attribute.write("\nnumber of columns   :"+str(ncols))
 
@@ -127,17 +141,17 @@ spin_attribute.write("\n2")
 
 spin_attribute.close()
 
-spin = open("spin_array.csv","w+")
+spin = open("Spin_Array.csv","w+")
 spin_writer=csv.writer(spin)
 spin_row=["temp","i","j","a[i,j]"]
 spin_writer.writerow(spin_row)
 
-magnet = open("magnetization.csv","w+")
+magnet = open("Magnetization.csv","w+")
 magnet.write("Temp , Ave_magnetization , Ave_magnetization^2 , Susceptibility")
 magnet.write("\n")
 magnet_writer=csv.writer(magnet)
 
-energyObj = open("energy.csv","w+")
+energyObj = open("Energy.csv","w+")
 energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
 energyObj.write("\n")
 energy_writer=csv.writer(energyObj)
@@ -245,7 +259,7 @@ for iscan in range(1,nscans+1):                                         #   Main
 
 #   End Scan Loop
 
-print("\nProgram Completed\n\n")
+print("\nProgram Completed open folder",path,"to view output\n\n")
 
 spin.close()                                            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
@@ -254,7 +268,7 @@ energyObj.close()
 Profiler = open("Program_Profile.csv","a+")
 time_elapsed=(time.perf_counter()-time_start)           #   Program execuion time profiler
 time_elapsed=round(time_elapsed,5)
-Profiler.write("\nProgram FInished running in "+str(time_elapsed)+" Seconds")
+Profiler.write("\nProgram FInished running in "+str(time_elapsed)+" Seconds on "+str(time.ctime()))
 Profiler.close()
 
 #   THE END
