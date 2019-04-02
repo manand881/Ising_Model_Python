@@ -16,4 +16,4 @@ def Ising_input():
 
     ConfigType = 1              #  1: checkerboard, 2: interface, 3: unequal interface, 4: Random Matrix
 
-    return nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType
+    return nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType      #   returning value to Main 
