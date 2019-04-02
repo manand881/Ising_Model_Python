@@ -1,12 +1,12 @@
 def Ising_input():
 
-    nrows = 40                  #  number of rows of spins (even number)
+    nrows = 20                  #  number of rows of spins (even number)
     
-    ncols = 40                  #  number of columns of spins (even number)
+    ncols = 20                  #  number of columns of spins (even number)
 
-    npass = 21000               #  number of passes for each temperature
+    npass = 60000               #  number of passes for each temperature
 
-    nequil = 20800              #  number of equilibration steps for each temperature
+    nequil = 40000              #  number of equilibration steps for each temperature
 
     high_temp = 4.0             #  temperature to start scan at
 

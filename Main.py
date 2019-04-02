@@ -82,16 +82,10 @@ print("Running program for %d rows and %d columns\n" % (iterator,iterator2))
 
 #   Matrix arrays are stored as a[depth,row,column] manner in Numpy
 
-
-
 start_matrix = numpy.ones((iterator,iterator2),dtype=int)
 a = start_matrix
 
-
-
 #   Functions
-
-
 
 #   Function to generate uniform random numbers
 
@@ -104,19 +98,16 @@ def pick_random(ran0):
 
 #   End of function
 
-
-
 #   Function to obtain magnetization value
 
 @jit(nopython=True)
 def magnetization_sum(iterator,iterator2,a):
-    return numpy.sum(a[1:iterator-2,1:iterator2-2])/(iterator*iterator2*1.0)
+    return numpy.sum(a[1:iterator-1,1:iterator2-1])/(iterator*iterator2*1.0)
 
 #   End of function
 
 path=Output_Path_Set()
 
-# nrows, ncols, npass, nequil, high_temp, low_temp, temp_interval, ConfigType
 
 input_config=open("Input_Config.csv","w+")                                #   To write input configuration to output folder in a seperate file for future use.
 input_config.write("Number of Rows          :"+str(nrows))              
@@ -156,11 +147,7 @@ energyObj.write("Temp , Ave_energy , Ave_energy^2 , C_v")
 energyObj.write("\n")
 energy_writer=csv.writer(energyObj)
 
-
-
 #   Section for choosing Configtype
-
-
 
 if(ConfigType==1):                                              
         
@@ -211,11 +198,7 @@ elif(ConfigType==4):
 else:
     print("Error! Check ConfigType parameter in ising.in")
 
-
-
 #   Scan Loop
-
-
 
 for iscan in range(1,nscans+1):                                         #   Main for loop    
     temp = float(round((high_temp - temp_interval*(iscan-1)), 3))       #   rounding off to two decimal places for optimisation purposes 
@@ -230,16 +213,10 @@ for iscan in range(1,nscans+1):                                         #   Main
     
     a=start_matrix                              #   Reseting matrix a to initial congiguration
 
-
-
     #   Main loop containing Monte Carlo algorithm
-
-
 
     m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave = Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , ran0 , a , magnetization , magnetization_ave , magnetization2_ave , energy , beta , DeltaU , output_count,energy_ave,energy2_ave )
     
-
-
     #   End Monte carlo pases
 
 
@@ -249,17 +226,15 @@ for iscan in range(1,nscans+1):                                         #   Main
             spin_row=[temp,i,j,a[i,j]]
             spin_writer.writerow(spin_row)
     
-    magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*(magnetization2_ave/output_count - (magnetization_ave/output_count)**2)]
+    magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*((magnetization2_ave/output_count) - (magnetization_ave/output_count)**2)]
     magnet_writer.writerow(magnet_row)
     
     energy_row=[temp , energy_ave/output_count , energy2_ave/output_count , (beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)]
     energy_writer.writerow(energy_row)
 
-
-
 #   End Scan Loop
 
-print("\nProgram Completed open folder",path,"to view output\n\n")
+print("\nProgram completed.\n\nOpen folder",path,"to view output.\n\n")
 
 spin.close()                                            #   Closing open files.This part is important as open files may not allow writing of new data
 magnet.close()
