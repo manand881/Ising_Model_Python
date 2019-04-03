@@ -1,4 +1,4 @@
-from numba import jit
+from numba import jit 
 
 import random
 import numpy
@@ -15,6 +15,7 @@ def pick_random(ran0):
 
 #   End of function
 
+
 #   Function to perfrom Montecarlo loop
 
 @jit(nopython=True)
@@ -30,8 +31,9 @@ def Monte_Carlo(m , n ,i , j , ipass , npass , nequil , iterator , iterator2 , r
                 magnetization2_ave = magnetization2_ave + magnetization**2
                 energy = 0.00
 
-                for i in range(0,iterator):         #   Rows
-                    for j in range(0,iterator2):    #   Columns
+
+                for i in range(0,iterator):             #   Rows
+                    for j in range(0,iterator2):        #   Columns
                     
                         energy = energy - a[m,n]*(a[m-1,n]+a[m+1,n]+a[m,n-1]+a[m,n+1])
                 
