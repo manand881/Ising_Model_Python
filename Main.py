@@ -204,7 +204,7 @@ for iscan in range(1,nscans+1):                                         #   Main
     temp = float(round((high_temp - temp_interval*(iscan-1)), 3))       #   rounding off to two decimal places for optimisation purposes 
     print("Running Program for Temperature : "+str(temp)+"\n")
     
-    beta = 1.0/temp                           #   Reseting variables to initial values
+    beta = 1.000/temp                           #   Reseting variables to initial values
     output_count = 0
     energy_ave = 0.0
     energy2_ave = 0.0
@@ -226,7 +226,7 @@ for iscan in range(1,nscans+1):                                         #   Main
             spin_row=[temp,i,j,a[i,j]]
             spin_writer.writerow(spin_row)
     
-    magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*((magnetization2_ave/output_count) - (magnetization_ave/output_count)**2)]
+    magnet_row=[temp , abs(magnetization_ave/output_count) , magnetization2_ave/output_count , beta*( (magnetization2_ave/output_count) - (magnetization_ave/output_count)**2 )]
     magnet_writer.writerow(magnet_row)
     
     energy_row=[temp , energy_ave/output_count , energy2_ave/output_count , (beta**2)*(energy2_ave/output_count - (energy_ave/output_count)**2)]
